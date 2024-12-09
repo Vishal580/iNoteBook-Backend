@@ -11,8 +11,7 @@ const mongooseURI = "mongodb://localhost:27017/inotebook"
 const connectToMongo = async () => {
     try {
         // Connect to MongoDB
-        await mongoose.connect(mongooseURI, {
-        });
+        await mongoose.connect(mongooseURI);
         console.log('Connected to MongoDB successfully');
     } catch (error) {
         // Log and handle connection errors
