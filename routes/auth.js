@@ -82,7 +82,7 @@ router.post('/login', [
     }
 })
 
-//ROUTE: 3 Get logged in user details: GET "/api/auth/getuser". It requires auth
+//ROUTE: 3 Get logged in user details: POST "/api/auth/getuser". It requires auth
 router.post('/getuser', fetchuser, async (req, res)=>{
     try {
         const userId = req.user.id;
