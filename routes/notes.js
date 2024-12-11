@@ -44,6 +44,7 @@ router.post('/addnote', fetchuser,[
 router.put('/updatenote/:id', fetchuser, async (req, res)=>{
     const {title, description, tag} = req.body; //Destructuring
 
+    try {
     //Create a new Object
     const newNote = {};
     if(title){newNote.title = title};
@@ -60,6 +61,30 @@ router.put('/updatenote/:id', fetchuser, async (req, res)=>{
     }
 
     note = await Note.findByIdAndUpdate(req.params.id, {$set: newNote}, {new: true}) //Updates the note
-    res.json({note});
+    res.json({note});   
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+})
+
+// ROUTE: 4 Delete an existing Notes using : DELETE "/api/notes/deletenote". It requires auth
+router.delete('/deletenote/:id', fetchuser, async (req, res)=>{
+    try {
+    //Find a note to be deleteed and delete it
+    let note = await Note.findById(req.params.id);
+    if(!note){return res.status(404).send("Not Found")};
+
+    //Check weather the owner of the note is accessing the note
+    if(note.user.toString()!== req.user.id){
+        return res.status(401).send("Not Allowed");
+    }
+
+    note = await Note.findByIdAndDelete(req.params.id) //Delete the note
+    res.json({"success": "Note has been deleted successfylly", note: note});
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send("Internal Server Error");
+    }
 })
 module.exports = router
