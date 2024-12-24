@@ -1,12 +1,7 @@
 const mongoose = require('mongoose')
 
-const mongooseURI = "mongodb://localhost:27017/inotebook"
+const mongooseURI = process.env.MONGO_URL
 
-// const connectToMongo = () => {
-//     mongoose.connect(mongooseURI, () =>{
-//         console.log('Connected to Mongo Successfully');
-//     })
-// }
 
 const connectToMongo = async () => {
     try {
@@ -16,7 +11,6 @@ const connectToMongo = async () => {
     } catch (error) {
         // Log and handle connection errors
         console.error('Failed to connect to MongoDB:', error);
-        process.exit(1); // Exit the application on failure
     }
 };
 
