@@ -53,6 +53,7 @@ router.post('/login', [
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Password field cannot be empty').exists()
 ],async (req, res)=>{
+    let success = false;
     // If there are errors, Retuen Bad Requesta and the errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -61,13 +62,14 @@ router.post('/login', [
 
     const {email, password} = req.body;
     try {
+        
         let user = await User.findOne({email});
         if(!user){
-            return res.status(400).json({error: "Please login using vaild credentials"});
+            return res.status(400).json({success, error: "Please login using vaild credentials"});
         }
         const passwordCompare = await bcrypt.compare(password, user.password);
         if(!passwordCompare){
-            return res.status(400).json({error: "Please login using vaild credentials"});
+            return res.status(400).json({success, error: "Please login using vaild credentials"});
         }
         const data = {
             user:{
@@ -75,10 +77,11 @@ router.post('/login', [
             }
         }
         const authtoken = jwt.sign(data, JWT_SECRET)
-        res.json({authtoken})
+        success = true;
+        res.json({success, authtoken})
     } catch (error) {
         console.log(error.message);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send(success, "Internal Server Error");
     }
 })
 
