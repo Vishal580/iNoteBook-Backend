@@ -18,6 +18,10 @@ const NotesSchema = new Schema({
         type: String,
         default: "General"
     },
+    tagColor: { 
+        type: String, 
+        default: "#808080" 
+    },
     date:{
         type: Date,
         default: Date.now
